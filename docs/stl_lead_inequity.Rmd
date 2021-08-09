@@ -34,11 +34,24 @@ stl_lead_prop = stl_lead %>% mutate(prop_white = (white / totalPop) * 100) %>%
 ```{r}
 equity_scatter = ggplot(data = stl_lead_prop, aes(x = prop_white, y = pctElevated)) +
   geom_point(color = "red", alpha = 0.7) +
-  labs(x = "Percent White", y = "Percent with Elevated Blood Lead") +
+  labs(x = "Percent White", y = "Percent with Elevated Blood Lead", title = "Blood Equity") +
   scale_y_continuous(breaks = seq(from = 0, to = 25, by = 5))
 
 equity_scatter
 
-ggsave(here("figs", "equity_scatter.png"))
+ggsave(here("figs", "equity_scatter.png"), width = 6, height = 5)
+```
+Interpretation: A distinct negative correlation between percent population white and percent population with elevated blood lead can be seen, with a larger spread in the data from less white populations.
+
+# histogram
+
+```{r}
+ggplot(data = stl_lead_prop, aes(x = pctElevated)) +
+  geom_histogram(fill = "purple", binwidth = 1, show.legend = FALSE) +
+  labs(x = "Percent of Population with Elevated Blood Lead", title = "Dying Children")
+
+  
+
+ggsave(here("figs", "equity_histogram.png"))
 ```
 
