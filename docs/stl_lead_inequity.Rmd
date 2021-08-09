@@ -1,0 +1,44 @@
+---
+title: "stl_lead_inequity"
+author: "Shale"
+date: "8/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(skimr)
+library(janitor)
+library(here)
+library(dplyr)
+```
+
+# Data exploration
+
+```{r}
+# read_delim() allows you to choose what character separates your values in the input file
+stl_lead = read_delim(here("data", "stl_blood_lead.csv"), delim = ";")
+```
+
+# Adding a column to the data frame
+```{r}
+stl_lead_prop = stl_lead %>% mutate(prop_white = (white / totalPop) * 100) %>% 
+  mutate(pctElevated = str_replace(pctElevated, pattern = ",", replacement = ".")) %>%
+  mutate(pctElevated = as.numeric(pctElevated))
+# pctElevated is displaying with commas instead of periods, so you can use mutate() to replace commas with periods and to change the data type of the column to a numeric.
+```
+
+# scatterplot
+
+```{r}
+equity_scatter = ggplot(data = stl_lead_prop, aes(x = prop_white, y = pctElevated)) +
+  geom_point(color = "red", alpha = 0.7) +
+  labs(x = "Percent White", y = "Percent with Elevated Blood Lead") +
+  scale_y_continuous(breaks = seq(from = 0, to = 25, by = 5))
+
+equity_scatter
+
+ggsave(here("figs", "equity_scatter.png"))
+```
+
